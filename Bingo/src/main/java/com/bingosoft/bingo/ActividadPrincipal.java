@@ -10,13 +10,19 @@ import android.app.FragmentTransaction;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.TextView;
+
+import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
+import com.bingosoft.bingo.utils.AndroidUtils;
 
 public class ActividadPrincipal extends Activity {
 
@@ -52,6 +58,13 @@ public class ActividadPrincipal extends Activity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,6 +159,43 @@ public class ActividadPrincipal extends Activity {
             textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
+
+        @Override
+        public void onResume(){
+            super.onResume();
+
+            try{
+
+                WebView webView = (WebView)getView().findViewById(R.id.conexionSignalR);
+
+                if (!(webView == null)) {
+
+                    String ip = AndroidUtils.getLocalIpAddress();
+
+                    String mac = AndroidUtils.getMacAddress(getActivity());
+
+                    webView.getSettings().setJavaScriptEnabled(true);
+                    webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+                    webView.getSettings().setDomStorageEnabled(true);
+                    webView.getSettings().setLoadWithOverviewMode(true);
+                    webView.getSettings().setUseWideViewPort(true);
+
+                    webView.setWebChromeClient(new WebChromeClient());
+
+                    final JavaScriptInterface javaScriptInterface = new JavaScriptInterface(getActivity());
+
+                    webView.addJavascriptInterface(javaScriptInterface, getString(R.string.JavaFunciones));
+
+                    webView.loadUrl(getString(R.string.RutaConexionSignalR));
+                }
+
+            }
+            catch (NullPointerException ex) {
+                //Log.w("BingoSoft",ex.getMessage());
+            }
+
+        }
+
     }
 
 }
