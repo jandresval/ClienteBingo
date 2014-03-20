@@ -1,0 +1,41 @@
+$(function () {
+        //Set the hubs URL for the connection
+            $.connection.hub.url = "http://192.168.0.110:8090/serverbingo/signalr";
+
+            // Declare a proxy to reference the hub.
+            var chat = $.connection.bingoHub;
+
+            // Create a function that the hub can call to broadcast messages.
+            chat.client.send = function (name, message) {
+                showAndroidToast(message);
+            };
+            // Get the user name and store it to prepend to messages.
+
+            // Set initial focus to message input box.
+            $('#message').focus();
+            $('#Connect').click(function () {
+                $.connection.hub.start({ transport: 'longPolling' }).done(function () {
+                $('#sendmessage').click(function () {
+                    // Call the Send method on the hub.
+                    chat.server.send($('#displayname').val(), $('#message').val());
+                    // Clear text box and reset focus for next comment.
+                    $('#message').val('').focus();
+                });
+            });
+            });
+            // Start the connection.
+
+        });
+
+        function showAndroidToast(message) {
+              AndroidFunction.showToast(message);
+        }
+
+        function callFromActivity(user) {
+          $('#displayname').val(user);
+          $('#Connect').trigger("click");
+        }
+
+
+
+        <script src="http://192.168.0.110:8090/serverbingo/signalr/hubs" type="text/javascript"></script>

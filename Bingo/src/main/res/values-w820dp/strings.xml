@@ -5,6 +5,7 @@
 
     <string name="JavaFunciones">AndroidFunction</string>
     <string name="RutaConexionSignalR">file:///android_asset/www/index.html</string>
+    <string name="Address">http://172.23.68.61:8090/signalr</string>
 
     <!-- End Parametros -->
 

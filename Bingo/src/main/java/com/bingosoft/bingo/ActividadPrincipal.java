@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
 import com.bingosoft.bingo.utils.AndroidUtils;
+import com.bingosoft.bingo.utils.HtmlUtils;
 
 public class ActividadPrincipal extends Activity {
 
@@ -62,8 +64,40 @@ public class ActividadPrincipal extends Activity {
     protected void onResume() {
         super.onResume();
 
+        try{
 
+            String hubs = HtmlUtils.readHtml(getString(R.string.Address)+"/hubs");
 
+            WebView webView = (WebView)findViewById(R.id.conexionSignalR);
+
+            if (!(webView == null)) {
+
+                String ip = AndroidUtils.getLocalIpAddress();
+
+                String mac = AndroidUtils.getMacAddress(this);
+
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+                webView.getSettings().setDomStorageEnabled(true);
+                webView.getSettings().setLoadWithOverviewMode(true);
+                webView.getSettings().setUseWideViewPort(true);
+
+                webView.setWebChromeClient(new WebChromeClient());
+
+                final JavaScriptInterface javaScriptInterface = new JavaScriptInterface(this);
+
+                webView.addJavascriptInterface(javaScriptInterface, getString(R.string.JavaFunciones));
+
+                webView.loadUrl(getString(R.string.RutaConexionSignalR));
+
+                webView.loadUrl("javascript:iniciarConexion('" + getString(R.string.Address) + "')");
+
+            }
+
+        }
+        catch (NullPointerException ex) {
+            //Log.w("BingoSoft",ex.getMessage());
+        }
     }
 
     @Override
@@ -164,35 +198,7 @@ public class ActividadPrincipal extends Activity {
         public void onResume(){
             super.onResume();
 
-            try{
 
-                WebView webView = (WebView)getView().findViewById(R.id.conexionSignalR);
-
-                if (!(webView == null)) {
-
-                    String ip = AndroidUtils.getLocalIpAddress();
-
-                    String mac = AndroidUtils.getMacAddress(getActivity());
-
-                    webView.getSettings().setJavaScriptEnabled(true);
-                    webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-                    webView.getSettings().setDomStorageEnabled(true);
-                    webView.getSettings().setLoadWithOverviewMode(true);
-                    webView.getSettings().setUseWideViewPort(true);
-
-                    webView.setWebChromeClient(new WebChromeClient());
-
-                    final JavaScriptInterface javaScriptInterface = new JavaScriptInterface(getActivity());
-
-                    webView.addJavascriptInterface(javaScriptInterface, getString(R.string.JavaFunciones));
-
-                    webView.loadUrl(getString(R.string.RutaConexionSignalR));
-                }
-
-            }
-            catch (NullPointerException ex) {
-                //Log.w("BingoSoft",ex.getMessage());
-            }
 
         }
 

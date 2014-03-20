@@ -9,58 +9,35 @@
 
 </head>
 <body>
-<input type="text" id="displayname" name="displayname"/>
-<input type="text" id="message" name="message" />
-<input type="button" id="Connect" name="Connect" value="Connect"/>
-<input type="button" id="sendmessage" name="sendmessage" value="Send Message" />
+<textarea id="ejecutar" name="ejecutar"></textarea>
+<input type="button" id="btEjectuar" name="btEjectuar" value="btEjectuar"/>
 
 <div id="discussion" class="discussion">
 
 </div>
 
 <script src="jquery-1.9.0.js" type="text/javascript"></script>
-<script src="jquery-ui-1.9.0.js" type="text/javascript"></script>
 <script src="jquery.mobile-1.2.0.js" type="text/javascript"></script>
+<script src="jquery-ui-1.9.0.js" type="text/javascript"></script>
 <script src="jquery.signalR.js" type="text/javascript"></script>
-<script src="http://192.168.0.110:8090/serverbingo/signalr/hubs" type="text/javascript"></script>
+<script src="hubs.js" type="text/javascript"></script>
+
 <script type="text/javascript">
-        $(function () {
-        //Set the hubs URL for the connection
-            $.connection.hub.url = "http://192.168.0.110:8090/serverbingo/signalr";
 
-            // Declare a proxy to reference the hub.
-            var chat = $.connection.bingoHub;
+function iniciarConexion(url) {
+    url = url + "/hubs";
 
-            // Create a function that the hub can call to broadcast messages.
-            chat.client.send = function (name, message) {
-                showAndroidToast(message);
-            };
-            // Get the user name and store it to prepend to messages.
+    $.getScript(url)
+       .done(function( script, textStatus ) {
+            console.log( textStatus );
+            AndroidFunction.showToast(textStatus);
+        })
+       .fail(function( jqxhr, settings, exception ) {
+            AndroidFunction.showToast(exception);
+       });
+}
 
-            // Set initial focus to message input box.
-            $('#message').focus();
-            $('#Connect').click(function () {
-                $.connection.hub.start({ transport: 'longPolling' }).done(function () {
-                $('#sendmessage').click(function () {
-                    // Call the Send method on the hub.
-                    chat.server.send($('#displayname').val(), $('#message').val());
-                    // Clear text box and reset focus for next comment.
-                    $('#message').val('').focus();
-                });
-            });
-            });
-            // Start the connection.
 
-        });
-
-        function showAndroidToast(message) {
-              AndroidFunction.showToast(message);
-        }
-
-        function callFromActivity(user) {
-          $('#displayname').val(user);
-          $('#Connect').trigger("click");
-        }
 
     </script>
 
