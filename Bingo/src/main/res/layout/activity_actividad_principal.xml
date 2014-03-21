@@ -1,21 +1,79 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:padding="4dip"
     android:gravity="center_horizontal"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:weightSum="1">
 
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pager"
-    android:layout_width="match_parent"
-    android:layout_height="0px"
-    android:layout_weight="1"
-    tools:context="com.bingosoft.bingo.ActividadPrincipal" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="439dp"
+        android:visibility="gone">
 
-</android.support.v4.view.ViewPager>
+        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/pager"
+        android:layout_width="249dp"
+        android:layout_height="384dp"
+        tools:context="com.bingosoft.bingo.ActividadPrincipal"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true">
+
+    </android.support.v4.view.ViewPager>
+    </RelativeLayout>
 
     <WebView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/conexionSignalR"
-        android:focusable="false" />
+        android:focusable="false"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="150dp"
+        android:layout_weight="0.93"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Usuario"
+            android:id="@+id/LabelUsuario"
+            android:layout_gravity="center_horizontal"
+            android:autoText="false"
+            android:singleLine="false"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/TUsuario"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Conectar"
+            android:id="@+id/Conectar"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onConectarClick" />
+
+        <view
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            class="android.support.v4.widget.ContentLoadingProgressBar"
+            android:id="@+id/ConectarProgress"
+            android:layout_gravity="right"
+            android:layout_weight="0.16" />
+    </LinearLayout>
 </LinearLayout>

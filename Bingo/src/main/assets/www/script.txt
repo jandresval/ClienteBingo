@@ -1,6 +1,6 @@
 $(function () {
-        //Set the hubs URL for the connection
-            $.connection.hub.url = "http://192.168.0.110:8090/serverbingo/signalr";
+            //Set the hubs URL for the connection
+            $.connection.hub.url = "http://192.168.0.110:8090/signalr";
 
             // Declare a proxy to reference the hub.
             var chat = $.connection.bingoHub;
@@ -35,7 +35,5 @@ $(function () {
           $('#displayname').val(user);
           $('#Connect').trigger("click");
         }
-
-
 
         <script src="http://192.168.0.110:8090/serverbingo/signalr/hubs" type="text/javascript"></script>

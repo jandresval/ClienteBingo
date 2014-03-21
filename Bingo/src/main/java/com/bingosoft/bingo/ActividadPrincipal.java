@@ -3,16 +3,12 @@ package com.bingosoft.bingo;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,11 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.TextView;
+import android.util.Log;
 
 import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
-import com.bingosoft.bingo.utils.AndroidUtils;
-import com.bingosoft.bingo.utils.HtmlUtils;
+import com.bingosoft.bingo.utils.AsincProcess;
 
 public class ActividadPrincipal extends Activity {
 
@@ -43,6 +41,10 @@ public class ActividadPrincipal extends Activity {
      */
     ViewPager mViewPager;
 
+    Button bConectar;
+
+    WebView conecionServer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,21 +62,24 @@ public class ActividadPrincipal extends Activity {
 
     }
 
+    public void onConectarClick(View v) {
+        conecionServer = (WebView)findViewById(R.id.conexionSignalR);
+        conecionServer.loadUrl("javascript:Conectar();");
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         try{
 
-            String hubs = HtmlUtils.readHtml(getString(R.string.Address)+"/hubs");
+            AsincProcess asincProcess = new AsincProcess();
 
-            WebView webView = (WebView)findViewById(R.id.conexionSignalR);
+            final String hubs = asincProcess.ProcessString(getString(R.string.Address)+"/hubs");
+
+            final WebView webView = (WebView)findViewById(R.id.conexionSignalR);
 
             if (!(webView == null)) {
-
-                String ip = AndroidUtils.getLocalIpAddress();
-
-                String mac = AndroidUtils.getMacAddress(this);
 
                 webView.getSettings().setJavaScriptEnabled(true);
                 webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -88,15 +93,23 @@ public class ActividadPrincipal extends Activity {
 
                 webView.addJavascriptInterface(javaScriptInterface, getString(R.string.JavaFunciones));
 
-                webView.loadUrl(getString(R.string.RutaConexionSignalR));
+                webView.setWebViewClient(new WebViewClient(){
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        //webView.loadUrl("javascript:("+hubs+")");
+                        //webView.loadUrl("javascript:(var ipServer='"+getString(R.string.Address)+"';)");
+                        webView.loadUrl("javascript:loadJS('"+getString(R.string.Address)+"/hubs')");
+                        webView.loadUrl("javascript:DefineServer('"+getString(R.string.Address)+"')");
+                    }
+                });
 
-                webView.loadUrl("javascript:iniciarConexion('" + getString(R.string.Address) + "')");
+                webView.loadUrl(getString(R.string.RutaConexionSignalR));
 
             }
 
         }
         catch (NullPointerException ex) {
-            //Log.w("BingoSoft",ex.getMessage());
+            Log.w("BingoSoft",ex.getMessage());
         }
     }
 

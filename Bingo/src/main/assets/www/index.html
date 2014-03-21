@@ -9,34 +9,48 @@
 
 </head>
 <body>
-<textarea id="ejecutar" name="ejecutar"></textarea>
-<input type="button" id="btEjectuar" name="btEjectuar" value="btEjectuar"/>
-
-<div id="discussion" class="discussion">
-
-</div>
 
 <script src="jquery-1.9.0.js" type="text/javascript"></script>
 <script src="jquery.mobile-1.2.0.js" type="text/javascript"></script>
 <script src="jquery-ui-1.9.0.js" type="text/javascript"></script>
 <script src="jquery.signalR.js" type="text/javascript"></script>
-<script src="hubs.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 
-function iniciarConexion(url) {
-    url = url + "/hubs";
+var ipServer = "";
 
-    $.getScript(url)
-       .done(function( script, textStatus ) {
-            console.log( textStatus );
-            AndroidFunction.showToast(textStatus);
-        })
-       .fail(function( jqxhr, settings, exception ) {
-            AndroidFunction.showToast(exception);
-       });
+$(function () {
+            //Set the hubs URL for the connection
+            $.connection.hub.url = ipServer;
+
+            // Declare a proxy to reference the hub.
+            var chat = $.connection.bingoHub;
+
+            $.connection.stateChanged(function (change) {
+                if (change.newState === $.signalR.connectionState.reconnecting) {
+                    AndroidFunction.Desconectado();
+                }else if (change.newState === $.signalR.connectionState.connected) {
+                    AndroidFunction.Conectado();
+                }
+            });
+
+        });
+
+function Conectar() {
+          $.connection.hub.start({ transport: 'longPolling' }).done(function () {
+             AndroidFunction.Conectado();
+          });
+        }
+
+function DefineServer(url){
+    ipServer = url;
 }
 
+function loadJS(url){
+
+$.getScript(url);
+
+}
 
 
     </script>
