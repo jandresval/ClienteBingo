@@ -37,7 +37,7 @@ public class AndroidUtils {
         WifiManager wimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         String macAddress = wimanager.getConnectionInfo().getMacAddress();
         if (macAddress == null) {
-            macAddress = "Device don't have mac address or wi-fi is disabled";
+            macAddress = "000000000000";
         }
         return macAddress;
     }

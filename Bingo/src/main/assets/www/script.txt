@@ -37,3 +37,43 @@ $(function () {
         }
 
         <script src="http://192.168.0.110:8090/serverbingo/signalr/hubs" type="text/javascript"></script>
+
+        $.connection.stateChanged(function (change) {
+                        if (change.newState === $.signalR.connectionState.reconnecting) {
+                            AndroidFunction.Desconectado();
+                        }else if (change.newState === $.signalR.connectionState.connected) {
+                            AndroidFunction.Conectado();
+                        }
+                    });
+
+
+
+function Conectar(usuario, ip, mac) {
+          $.connection.hub.start({ transport: 'longPolling' }).done(function () {
+             AndroidFunction.Conectado();
+          });
+
+
+
+        }
+
+
+conecionServer.loadUrl("javascript:Conectar('" +
+                usuario + "','" +
+                ip + "','" +
+                mac + "');");
+
+
+                    bingoUsuario = {
+                                    Alias:"",
+                                    Macadress:"",
+                                    Ip:"",
+                                    Gpslatitud:0,
+                                    Gpslongitud:0
+                                };
+
+                                 bingoUsuario.Alias = usuario;
+                                 bingoUsuario.Macadress = mac;
+                                 bingoUsuario.Ip = ip;
+
+                                 $.connection.bingoHub.server.conectarUsurio(bingoUsuario);

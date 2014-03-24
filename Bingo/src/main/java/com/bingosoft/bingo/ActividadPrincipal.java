@@ -6,9 +6,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +23,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.util.Log;
 
 import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
+import com.bingosoft.bingo.utils.AndroidUtils;
 import com.bingosoft.bingo.utils.AsincProcess;
 
 public class ActividadPrincipal extends Activity {
@@ -41,9 +48,25 @@ public class ActividadPrincipal extends Activity {
      */
     ViewPager mViewPager;
 
+    /**
+     * Este es el buton con el que nos vamos a conectar al servicio
+     */
     Button bConectar;
 
+    /**
+     * Este es conector al servicio web
+     */
     WebView conecionServer;
+
+    /**
+     * Este es el text para introducir el usuario
+     */
+    EditText textUsuario;
+
+    /**
+     * Variable para determinar si la pagina cargo correctamente
+     */
+    boolean paginaCargo = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +83,75 @@ public class ActividadPrincipal extends Activity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+
+        iniciarTextUsuario();
+
+    }
+
+    public void iniciarTextUsuario() {
+
+        InputFilter espaciosFilter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for(int k = start; k < end; k++) {
+                    if (Character.isSpaceChar(source.charAt(k))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        };
+
+        textUsuario = (EditText) findViewById(R.id.TUsuario);
+
+        textUsuario.setFilters(new InputFilter[]{ espaciosFilter });
+
+        textUsuario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 3)
+                    enableConectar();
+                else
+                    disableConectar();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
     public void onConectarClick(View v) {
+
         conecionServer = (WebView)findViewById(R.id.conexionSignalR);
-        conecionServer.loadUrl("javascript:Conectar();");
+
+        textUsuario = (EditText)findViewById(R.id.TUsuario);
+
+        String usuario = textUsuario.getText().toString();
+
+        String ip = AndroidUtils.getLocalIpAddress();
+
+        String macAddress = AndroidUtils.getMacAddress(this);
+
+        conecionServer.loadUrl("javascript:Conectar('" +
+                usuario + "','" +
+                ip + "','" +
+                macAddress + "');");
+    }
+
+    public void enableConectar() {
+        textUsuario = (EditText) findViewById(R.id.TUsuario);
+        if (textUsuario.getText().length() > 3 && paginaCargo == true) {
+            bConectar = (Button) findViewById(R.id.Conectar);
+            bConectar.setEnabled(true);
+        }
+    }
+
+    public void disableConectar() {
+        bConectar = (Button) findViewById(R.id.Conectar);
+        bConectar.setEnabled(false);
     }
 
     @Override
@@ -73,11 +160,7 @@ public class ActividadPrincipal extends Activity {
 
         try{
 
-            AsincProcess asincProcess = new AsincProcess();
-
-            final String hubs = asincProcess.ProcessString(getString(R.string.Address)+"/hubs");
-
-            final WebView webView = (WebView)findViewById(R.id.conexionSignalR);
+            WebView webView = (WebView)findViewById(R.id.conexionSignalR);
 
             if (!(webView == null)) {
 
@@ -93,13 +176,16 @@ public class ActividadPrincipal extends Activity {
 
                 webView.addJavascriptInterface(javaScriptInterface, getString(R.string.JavaFunciones));
 
-                webView.setWebViewClient(new WebViewClient(){
+                webView.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                        paginaCargo = false;
+                        disableConectar();
+                    }
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        //webView.loadUrl("javascript:("+hubs+")");
-                        //webView.loadUrl("javascript:(var ipServer='"+getString(R.string.Address)+"';)");
-                        webView.loadUrl("javascript:loadJS('"+getString(R.string.Address)+"/hubs')");
-                        webView.loadUrl("javascript:DefineServer('"+getString(R.string.Address)+"')");
+                        paginaCargo = true;
+                        enableConectar();
                     }
                 });
 

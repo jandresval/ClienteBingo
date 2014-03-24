@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.0"
+    buildToolsVersion '19.0.0'
 
     defaultConfig {
         minSdkVersion 14
@@ -20,4 +20,7 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v13:+'
+    compile files('src/main/librerias/joda-time-2.3.jar')
+    compile files('src/main/librerias/quick-json-1.0.2.3.jar')
+    compile 'org.mod4j.org.apache.commons:lang:2.1.0@jar'
 }

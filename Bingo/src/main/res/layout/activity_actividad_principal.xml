@@ -66,7 +66,8 @@
             android:text="Conectar"
             android:id="@+id/Conectar"
             android:layout_gravity="center_horizontal"
-            android:onClick="onConectarClick" />
+            android:onClick="onConectarClick"
+            android:enabled="false" />
 
         <view
             android:layout_width="64dp"

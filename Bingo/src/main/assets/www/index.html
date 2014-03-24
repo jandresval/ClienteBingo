@@ -14,43 +14,54 @@
 <script src="jquery.mobile-1.2.0.js" type="text/javascript"></script>
 <script src="jquery-ui-1.9.0.js" type="text/javascript"></script>
 <script src="jquery.signalR.js" type="text/javascript"></script>
+<script src="http://192.168.0.110:8090/signalr/hubs" type="text/javascript"></script>
 
 <script type="text/javascript">
 
-var ipServer = "";
+var chat;
+
 
 $(function () {
             //Set the hubs URL for the connection
-            $.connection.hub.url = ipServer;
+            $.connection.hub.url = 'http://192.168.0.110:8090/signalr';
 
             // Declare a proxy to reference the hub.
-            var chat = $.connection.bingoHub;
+            chat = $.connection.bingoHub;
 
-            $.connection.stateChanged(function (change) {
-                if (change.newState === $.signalR.connectionState.reconnecting) {
-                    AndroidFunction.Desconectado();
-                }else if (change.newState === $.signalR.connectionState.connected) {
-                    AndroidFunction.Conectado();
-                }
-            });
+
 
         });
 
-function Conectar() {
-          $.connection.hub.start({ transport: 'longPolling' }).done(function () {
-             AndroidFunction.Conectado();
+function Conectar(usuario, ip, macAddress) {
+          $.connection.hub.start()
+          .done(function () {
+
+             usuarioConexion = {
+                Alias:"",
+                Macadress:"",
+                Ip:"",
+                Gpslatitud:0,
+                Gpslongitud:0
+            };
+
+             usuarioConexion.Alias = usuario;
+             usuarioConexion.Macadress = mac;
+             usuarioConexion.Ip = ip;
+
+             $.connection.bingoHub.server.conectarUsurio(usuarioConexion);
+
+
+             AndroidFunction.showToast("Conection: " + $.connection.hub.id);
+
+          })
+          .fail(function() {
+            AndroidFunction.showToast("Error.");
           });
+
+
+
         }
 
-function DefineServer(url){
-    ipServer = url;
-}
-
-function loadJS(url){
-
-$.getScript(url);
-
-}
 
 
     </script>
