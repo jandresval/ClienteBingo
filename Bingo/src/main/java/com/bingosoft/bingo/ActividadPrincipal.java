@@ -154,6 +154,10 @@ public class ActividadPrincipal extends Activity {
         bConectar.setEnabled(false);
     }
 
+    public void usuarioConectado() {
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

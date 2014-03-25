@@ -30,9 +30,10 @@ public class JavaScriptInterface {
                 ex.printStackTrace();
             }
         }
-        if (!(bingousuario == null)) {
+        /*if (!(bingousuario == null)) {
             showToast("Informacion: " + bingousuario.Ultimafechaconexion.toString());
-        }
+        }*/
+
     }
 
     public void showToast(String toast){
