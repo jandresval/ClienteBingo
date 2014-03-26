@@ -1,5 +1,6 @@
 package com.bingosoft.bingo;
 
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -19,17 +20,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.ViewAnimator;
 
 import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
 import com.bingosoft.bingo.utils.AndroidUtils;
-import com.bingosoft.bingo.utils.AsincProcess;
+import com.bingosoft.bingo.utils.StringUtils;
 
 public class ActividadPrincipal extends Activity {
 
@@ -68,6 +75,26 @@ public class ActividadPrincipal extends Activity {
      */
     boolean paginaCargo = false;
 
+    /**
+     * Variable para realizar el cambio de pantallas
+     */
+    static ViewAnimator animacionPantallas;
+
+    /**
+     * Variable para contener la animacion.
+     */
+    Animation slide_out_right,slide_in_left;
+
+    /**
+     * Variable donde se almacena la comunciacion con el servidor.
+     */
+    JavaScriptInterface javaScriptInterface;
+
+    /**
+     * Opciones que tiene el usuario.
+     */
+    ListView opcionesUsuario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +109,18 @@ public class ActividadPrincipal extends Activity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        animacionPantallas = (ViewAnimator)findViewById(R.id.viewAnimator);
+
+        slide_out_right = AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right);
+        slide_in_left = AnimationUtils.loadAnimation(this,android.R.anim.slide_in_left);
+
+        animacionPantallas.setInAnimation(slide_in_left);
+        animacionPantallas.setOutAnimation(slide_out_right);
+
+        opcionesUsuario = (ListView) findViewById(R.id.opcionesUsuario);
+
+        textUsuario = (EditText) findViewById(R.id.TUsuario);
 
 
         iniciarTextUsuario();
@@ -143,7 +182,7 @@ public class ActividadPrincipal extends Activity {
 
     public void enableConectar() {
         textUsuario = (EditText) findViewById(R.id.TUsuario);
-        if (textUsuario.getText().length() > 3 && paginaCargo == true) {
+        if (textUsuario.getText().length() > 3 && paginaCargo) {
             bConectar = (Button) findViewById(R.id.Conectar);
             bConectar.setEnabled(true);
         }
@@ -154,9 +193,6 @@ public class ActividadPrincipal extends Activity {
         bConectar.setEnabled(false);
     }
 
-    public void usuarioConectado() {
-
-    }
 
     @Override
     protected void onResume() {
@@ -176,9 +212,18 @@ public class ActividadPrincipal extends Activity {
 
                 webView.setWebChromeClient(new WebChromeClient());
 
-                final JavaScriptInterface javaScriptInterface = new JavaScriptInterface(this);
+                boolean conectar = false;
+
+                if (javaScriptInterface == null)
+                    javaScriptInterface = new JavaScriptInterface(this);
+                else {
+                    animacionPantallas.setDisplayedChild(0);
+                    conectar = true;
+                }
 
                 webView.addJavascriptInterface(javaScriptInterface, getString(R.string.JavaFunciones));
+
+                final boolean finalConectar = conectar;
 
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
@@ -190,6 +235,7 @@ public class ActividadPrincipal extends Activity {
                     public void onPageFinished(WebView view, String url) {
                         paginaCargo = true;
                         enableConectar();
+                        if (finalConectar) onConectarClick(null);
                     }
                 });
 
@@ -223,7 +269,42 @@ public class ActividadPrincipal extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    
+    public void usuarioConecto() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                animacionPantallas.showPrevious();
+                opcionesUsuario.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+    public void usuarioDesconecto() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                animacionPantallas.showNext();
+                opcionesUsuario.setVisibility(View.VISIBLE);
+                String[] opciones = StringUtils.opcionesdeNombre(textUsuario.getText().toString());
+                opcionesUsuario.setAdapter(new ArrayAdapter<String>(
+                        getApplicationContext(),
+                        R.layout.list_opciones,
+                        opciones));
+
+                opcionesUsuario.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent,
+                                            View view,
+                                            int position,
+                                            long id) {
+                        textUsuario.setText(((TextView) view).getText());
+                    }
+                });
+            }
+        });
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

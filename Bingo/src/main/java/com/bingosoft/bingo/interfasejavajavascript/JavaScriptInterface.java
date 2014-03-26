@@ -3,6 +3,7 @@ package com.bingosoft.bingo.interfasejavajavascript;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.bingosoft.bingo.ActividadPrincipal;
 import com.bingosoft.bingo.model.Bingousuario;
 
 /**
@@ -14,7 +15,8 @@ public class JavaScriptInterface {
 
     private boolean _conectado;
 
-    public Bingousuario bingousuario;
+    public Bingousuario bingousuario = null;
+
 
     public JavaScriptInterface(Context c) {
         mContext = c;
@@ -30,11 +32,11 @@ public class JavaScriptInterface {
                 ex.printStackTrace();
             }
         }
-        /*if (!(bingousuario == null)) {
-            showToast("Informacion: " + bingousuario.Ultimafechaconexion.toString());
-        }*/
+
 
     }
+
+
 
     public void showToast(String toast){
         Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
@@ -45,15 +47,16 @@ public class JavaScriptInterface {
     }
 
     public void Conectado(){
-        showToast("Se conecto.");
         _conectado = true;
+        ActividadPrincipal actividadPrincipal = (ActividadPrincipal)mContext;
+        actividadPrincipal.usuarioConecto();
     }
 
     public void DesConectado(){
         _conectado = false;
+        ActividadPrincipal actividadPrincipal = (ActividadPrincipal)mContext;
+        actividadPrincipal.usuarioDesconecto();
     }
-
-
 
 
 }
