@@ -17,10 +17,13 @@ public class JavaScriptInterface {
 
     public Bingousuario bingousuario = null;
 
+    public boolean _juego = false;
+
 
     public JavaScriptInterface(Context c) {
         mContext = c;
         _conectado = false;
+        _juego = false;
     }
 
     public void cargarBingoUsuario(String jsonBingoUsuario) {
@@ -32,8 +35,10 @@ public class JavaScriptInterface {
                 ex.printStackTrace();
             }
         }
+    }
 
-
+    public void iniciarJuego() {
+        _juego = true;
     }
 
 

@@ -1,12 +1,10 @@
 package com.bingosoft.bingo;
 
-import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
@@ -30,8 +28,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
@@ -78,7 +78,7 @@ public class ActividadPrincipal extends Activity {
     /**
      * Variable para realizar el cambio de pantallas
      */
-    static ViewAnimator animacionPantallas;
+    ViewAnimator animacionPantallas;
 
     /**
      * Variable para contener la animacion.
@@ -95,11 +95,15 @@ public class ActividadPrincipal extends Activity {
      */
     ListView opcionesUsuario;
 
+    /**
+     * Variable para esperar el proceso de coneccion.
+     */
+    ProgressBar spinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividad_principal);
-
 
 
         // Create the adapter that will return a fragment for each of the three
@@ -110,6 +114,21 @@ public class ActividadPrincipal extends Activity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        opcionesUsuario = (ListView) findViewById(R.id.opcionesUsuario);
+
+        conecionServer = (WebView) findViewById(R.id.conexionSignalR);
+
+        IniciarPantalas();
+
+        textUsuario = (EditText) findViewById(R.id.TUsuario);
+
+        spinner = (ProgressBar) findViewById(R.id.ConectarProgress);
+
+        iniciarTextUsuario();
+
+    }
+
+    protected void IniciarPantalas() {
         animacionPantallas = (ViewAnimator)findViewById(R.id.viewAnimator);
 
         slide_out_right = AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right);
@@ -117,13 +136,6 @@ public class ActividadPrincipal extends Activity {
 
         animacionPantallas.setInAnimation(slide_in_left);
         animacionPantallas.setOutAnimation(slide_out_right);
-
-        opcionesUsuario = (ListView) findViewById(R.id.opcionesUsuario);
-
-        textUsuario = (EditText) findViewById(R.id.TUsuario);
-
-
-        iniciarTextUsuario();
 
     }
 
@@ -164,6 +176,8 @@ public class ActividadPrincipal extends Activity {
 
     public void onConectarClick(View v) {
 
+        spinner.setVisibility(View.VISIBLE);
+
         conecionServer = (WebView)findViewById(R.id.conexionSignalR);
 
         textUsuario = (EditText)findViewById(R.id.TUsuario);
@@ -178,6 +192,8 @@ public class ActividadPrincipal extends Activity {
                 usuario + "','" +
                 ip + "','" +
                 macAddress + "');");
+
+        spinner.setVisibility(View.GONE);
     }
 
     public void enableConectar() {
@@ -241,12 +257,21 @@ public class ActividadPrincipal extends Activity {
 
                 webView.loadUrl(getString(R.string.RutaConexionSignalR));
 
+            } else {
+                Toast.makeText(this,"El webview no esta presente.", Toast.LENGTH_SHORT).show();
             }
 
         }
         catch (NullPointerException ex) {
+            Toast.makeText(this,ex.getMessage(), Toast.LENGTH_SHORT).show();
             Log.w("BingoSoft",ex.getMessage());
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        conecionServer.loadUrl("javascript:DesconectarUsu();");
     }
 
     @Override
