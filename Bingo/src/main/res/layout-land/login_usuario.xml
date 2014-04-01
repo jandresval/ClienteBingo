@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:fillViewport="false">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="60dp"
     android:weightSum="1">
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="8dip"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="50"
+        android:layout_gravity="top" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -17,7 +37,8 @@
         android:autoText="false"
         android:singleLine="false"
         android:textAlignment="center"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:paddingTop="70dp" />
 
     <EditText
         android:layout_width="225dp"
@@ -25,15 +46,9 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/TUsuario"
-        android:layout_gravity="center_horizontal" />
-
-    <ListView
-        android:layout_width="225dp"
-        android:layout_height="146dp"
-        android:id="@+id/opcionesUsuario"
         android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        style="@style/AppTheme" />
+        android:maxLength="15"
+        android:typeface="normal" />
 
     <Button
         android:layout_width="wrap_content"
@@ -44,11 +59,16 @@
         android:onClick="onConectarClick"
         android:enabled="false" />
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ConectarProgress"
+    <ListView
+        android:layout_width="225dp"
+        android:layout_height="146dp"
+        android:id="@+id/opcionesUsuario"
         android:layout_gravity="center_horizontal"
-        android:visibility="gone" />
+        android:visibility="gone"
+        style="@style/AppTheme" />
 
 </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

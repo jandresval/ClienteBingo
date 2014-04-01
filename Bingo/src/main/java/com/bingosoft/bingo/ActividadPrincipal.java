@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import android.util.Log;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
+import android.widget.ViewFlipper;
 
 import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
 import com.bingosoft.bingo.utils.AndroidUtils;
@@ -122,7 +124,9 @@ public class ActividadPrincipal extends Activity {
 
         textUsuario = (EditText) findViewById(R.id.TUsuario);
 
-        spinner = (ProgressBar) findViewById(R.id.ConectarProgress);
+        spinner = (ProgressBar) findViewById(R.id.progressBar1);
+
+        spinner.setProgress(0);
 
         iniciarTextUsuario();
 
@@ -176,24 +180,36 @@ public class ActividadPrincipal extends Activity {
 
     public void onConectarClick(View v) {
 
-        spinner.setVisibility(View.VISIBLE);
+        spinner.setProgress(20);
 
         conecionServer = (WebView)findViewById(R.id.conexionSignalR);
 
+        spinner.setProgress(40);
+
         textUsuario = (EditText)findViewById(R.id.TUsuario);
+
+        spinner.setProgress(50);
 
         String usuario = textUsuario.getText().toString();
 
+        spinner.setProgress(60);
+
         String ip = AndroidUtils.getLocalIpAddress();
 
+        spinner.setProgress(80);
+
         String macAddress = AndroidUtils.getMacAddress(this);
+
+        spinner.setProgress(90);
 
         conecionServer.loadUrl("javascript:Conectar('" +
                 usuario + "','" +
                 ip + "','" +
                 macAddress + "');");
 
-        spinner.setVisibility(View.GONE);
+        spinner.setProgress(100);
+
+        spinner.setProgress(0);
     }
 
     public void enableConectar() {
@@ -234,7 +250,8 @@ public class ActividadPrincipal extends Activity {
                     javaScriptInterface = new JavaScriptInterface(this);
                 else {
                     animacionPantallas.setDisplayedChild(0);
-                    conectar = true;
+                    if (textUsuario.getText().length()>3)
+                        conectar = true;
                 }
 
                 webView.addJavascriptInterface(javaScriptInterface, getString(R.string.JavaFunciones));
@@ -298,7 +315,7 @@ public class ActividadPrincipal extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                animacionPantallas.showPrevious();
+                animacionPantallas.setDisplayedChild(1);
                 opcionesUsuario.setVisibility(View.GONE);
             }
         });
@@ -309,7 +326,7 @@ public class ActividadPrincipal extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                animacionPantallas.showNext();
+                animacionPantallas.setDisplayedChild(0);
                 opcionesUsuario.setVisibility(View.VISIBLE);
                 String[] opciones = StringUtils.opcionesdeNombre(textUsuario.getText().toString());
                 opcionesUsuario.setAdapter(new ArrayAdapter<String>(

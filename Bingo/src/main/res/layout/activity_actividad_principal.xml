@@ -13,12 +13,11 @@
         android:focusable="false"
         android:visibility="gone" />
 
-    <ViewAnimator
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/viewAnimator"
-        android:layout_gravity="center_horizontal" >
 
+    <ViewAnimator
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewAnimator" >
 
         <include
             android:layout_width="match_parent"
@@ -28,9 +27,12 @@
         <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            layout="@layout/pantalla_espera" />
+
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             layout="@layout/diseno_tablas" />
-
-
     </ViewAnimator>
 
 
