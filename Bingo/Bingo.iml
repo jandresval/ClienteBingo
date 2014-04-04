@@ -75,6 +75,7 @@
     <orderEntry type="library" exported="" name="lang-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.3" level="project" />
+    <orderEntry type="library" exported="" name="twoway-view-master" level="project" />
   </component>
 </module>
 

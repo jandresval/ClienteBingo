@@ -2,11 +2,11 @@ package com.bingosoft.bingo;
 
 import java.util.Locale;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -28,15 +28,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
-import android.widget.ViewFlipper;
+import android.widget.ViewSwitcher;
+import android.app.ActionBar.LayoutParams;
 
 import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
+import com.bingosoft.bingo.model.Bingousuario;
 import com.bingosoft.bingo.utils.AndroidUtils;
 import com.bingosoft.bingo.utils.StringUtils;
 
@@ -102,6 +106,17 @@ public class ActividadPrincipal extends Activity {
      */
     ProgressBar spinner;
 
+    /**
+     *
+     */
+    ActionBar actionBar;
+
+    TextView dineroUsuario;
+
+    TextView nombreUsuario;
+
+    ImageSwitcher cargaBalotas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +144,25 @@ public class ActividadPrincipal extends Activity {
         spinner.setProgress(0);
 
         iniciarTextUsuario();
+
+        actionBar = getActionBar();
+
+        dineroUsuario = (TextView) findViewById(R.id.dineroUsuario);
+
+        nombreUsuario = (TextView) findViewById(R.id.nombreUsuario);
+
+        cargaBalotas = (ImageSwitcher) findViewById(R.id.cargaBalotas);
+
+        cargaBalotas.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                ImageView imageView = new ImageView(getApplicationContext());
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                imageView.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT,
+                        LayoutParams.MATCH_PARENT));
+                return imageView;
+            }
+        });
 
     }
 
@@ -232,6 +266,8 @@ public class ActividadPrincipal extends Activity {
 
         try{
 
+
+
             WebView webView = (WebView)findViewById(R.id.conexionSignalR);
 
             if (!(webView == null)) {
@@ -295,8 +331,9 @@ public class ActividadPrincipal extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.actividad_principal, menu);
-        return true;
+        //getMenuInflater().inflate(R.menu.actividad_principal, menu);
+        //return true;
+        return false;
     }
 
     @Override
@@ -304,18 +341,49 @@ public class ActividadPrincipal extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        /*int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
-        }
-        return super.onOptionsItemSelected(item);
+        }*/
+        //return super.onOptionsItemSelected(item);
+        return false;
+    }
+
+    public void iniciarJuego() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                Bingousuario bingousuario = javaScriptInterface.bingousuario;
+
+                nombreUsuario.setText(bingousuario.Alias);
+
+                String SaldoActual = Double.toString(bingousuario.Saldoactual);
+
+                dineroUsuario.setText(SaldoActual);
+
+                animacionPantallas.setDisplayedChild(2);
+
+                actionBar.hide();
+
+                cargaBalotas.setImageResource(R.drawable.uno);
+                cargaBalotas.setImageResource(R.drawable.dos);
+                cargaBalotas.setImageResource(R.drawable.tres);
+
+            }
+        });
     }
 
     public void usuarioConecto() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                animacionPantallas.setDisplayedChild(1);
+                Bingousuario bingousuario = javaScriptInterface.bingousuario;
+
+                if (!(bingousuario.Saldoactual == 0))
+                    iniciarJuego();
+                else
+                    animacionPantallas.setDisplayedChild(1);
                 opcionesUsuario.setVisibility(View.GONE);
             }
         });
@@ -326,6 +394,9 @@ public class ActividadPrincipal extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                actionBar.show();
+
                 animacionPantallas.setDisplayedChild(0);
                 opcionesUsuario.setVisibility(View.VISIBLE);
                 String[] opciones = StringUtils.opcionesdeNombre(textUsuario.getText().toString());

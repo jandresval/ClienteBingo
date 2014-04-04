@@ -27,13 +27,10 @@ public class JavaScriptInterface {
     }
 
     public void cargarBingoUsuario(String jsonBingoUsuario) {
-        if (!jsonBingoUsuario.equals("")) {
-            try {
-                bingousuario = new Bingousuario(jsonBingoUsuario);
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        if (!jsonBingoUsuario.equals("")) try {
+            bingousuario = new Bingousuario(jsonBingoUsuario);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
