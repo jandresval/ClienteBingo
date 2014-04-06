@@ -7,8 +7,9 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="D:\projects\Java\ClienteBingo" />
-            <option value="D:\projects\Java\ClienteBingo\Bingo" />
+            <option value="G:\Projects\Java\ClienteBingo" />
+            <option value="G:\Projects\Java\ClienteBingo\Bingo" />
+            <option value="G:\Projects\Java\ClienteBingo\library" />
           </set>
         </option>
       </GradleProjectSettings>

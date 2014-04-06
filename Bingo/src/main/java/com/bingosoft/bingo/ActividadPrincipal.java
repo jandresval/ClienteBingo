@@ -1,5 +1,6 @@
 package com.bingosoft.bingo;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -7,6 +8,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -28,7 +32,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -36,13 +39,15 @@ import android.widget.TextView;
 import android.util.Log;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
-import android.widget.ViewSwitcher;
-import android.app.ActionBar.LayoutParams;
 
+import com.bingosoft.bingo.adapter.ImageAdapter;
+import com.bingosoft.bingo.adapter.items.ImageItem;
 import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
 import com.bingosoft.bingo.model.Bingousuario;
 import com.bingosoft.bingo.utils.AndroidUtils;
 import com.bingosoft.bingo.utils.StringUtils;
+
+import org.lucasr.twowayview.TwoWayView;
 
 public class ActividadPrincipal extends Activity {
 
@@ -115,7 +120,12 @@ public class ActividadPrincipal extends Activity {
 
     TextView nombreUsuario;
 
-    ImageSwitcher cargaBalotas;
+    ArrayList<ImageItem> imageItems;
+
+    ImageAdapter imageAdapter;
+
+    TwoWayView lvTest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,18 +161,17 @@ public class ActividadPrincipal extends Activity {
 
         nombreUsuario = (TextView) findViewById(R.id.nombreUsuario);
 
-        cargaBalotas = (ImageSwitcher) findViewById(R.id.cargaBalotas);
+        imageItems = new ArrayList<ImageItem>();
 
-        cargaBalotas.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                ImageView imageView = new ImageView(getApplicationContext());
-                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                imageView.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT,
-                        LayoutParams.MATCH_PARENT));
-                return imageView;
-            }
-        });
+        imageAdapter = new ImageAdapter(this,
+                R.layout.image_item,
+                imageItems);
+
+        lvTest = (TwoWayView) findViewById(R.id.lvItems);
+
+        lvTest.setAdapter(imageAdapter);
+
+
 
     }
 
@@ -366,9 +375,21 @@ public class ActividadPrincipal extends Activity {
 
                 actionBar.hide();
 
-                cargaBalotas.setImageResource(R.drawable.uno);
-                cargaBalotas.setImageResource(R.drawable.dos);
-                cargaBalotas.setImageResource(R.drawable.tres);
+
+            }
+        });
+    }
+
+    public void Balota(final int balota) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                imageItems.add(new ImageItem(balota));
+
+                imageAdapter.notifyDataSetChanged();
+
+                lvTest.setSelection(imageItems.size());
 
             }
         });
@@ -414,6 +435,10 @@ public class ActividadPrincipal extends Activity {
                         textUsuario.setText(((TextView) view).getText());
                     }
                 });
+
+                imageItems.clear();
+
+                imageAdapter.notifyDataSetChanged();
             }
         });
     }

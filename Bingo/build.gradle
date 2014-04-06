@@ -3,7 +3,6 @@ apply plugin: 'android'
 android {
     compileSdkVersion 19
     buildToolsVersion '19.0.0'
-
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
@@ -16,6 +15,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    signingConfigs {
+    }
 }
 
 dependencies {
@@ -24,5 +25,5 @@ dependencies {
     compile files('src/main/librerias/quick-json-1.0.2.3.jar')
     compile 'org.mod4j.org.apache.commons:lang:2.1.0@jar'
     compile 'com.android.support:support-v4:+'
-    compile files('src/main/librerias/twoway-view-master.zip')
+    compile project(':library')
 }

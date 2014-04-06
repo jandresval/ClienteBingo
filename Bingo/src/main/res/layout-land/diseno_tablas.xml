@@ -6,14 +6,14 @@
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/pager"
-        android:layout_width="460dp"
-        android:layout_height="216dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:context="com.bingosoft.bingo.ActividadPrincipal"
-        android:layout_column="1"
-        android:layout_span="5"
         android:layout_toRightOf="@+id/space2"
-        android:layout_toLeftOf="@+id/space3"
-        android:layout_above="@+id/space4">
+        android:layout_above="@+id/space4"
+        android:layout_alignRight="@+id/dineroUsuario"
+        android:layout_alignEnd="@+id/dineroUsuario"
+        android:layout_below="@+id/space">
     </android.support.v4.view.ViewPager>
 
     <TextView
@@ -21,21 +21,13 @@
         android:layout_height="wrap_content"
         android:text="000000"
         android:id="@+id/dineroUsuario"
-        android:layout_column="6"
         android:textStyle="bold"
         android:typeface="normal"
         android:textSize="30dp"
         android:layout_toLeftOf="@+id/space3"
         android:layout_below="@+id/space5"
-        android:singleLine="false" />
-
-    <Space
-        android:layout_width="20dp"
-        android:layout_height="25dp"
-        android:id="@+id/space"
-        android:layout_above="@+id/pager"
-        android:layout_toRightOf="@+id/space2"
-        android:layout_toLeftOf="@+id/space3" />
+        android:singleLine="false"
+        android:layout_above="@+id/pager" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -67,8 +59,8 @@
         android:layout_alignParentTop="true" />
 
     <Space
-        android:layout_width="20dp"
-        android:layout_height="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -100,14 +92,28 @@
         android:layout_toLeftOf="@+id/dineroUsuario"
         android:id="@+id/space7" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_toLeftOf="@+id/space7"
-        android:layout_above="@+id/space"
+    <org.lucasr.twowayview.TwoWayView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/lvItems"
+        style="@style/TwoWayView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawSelectorOnTop="false"
+        tools:context=".MainActivity"
+        android:layout_alignTop="@+id/dineroUsuario"
         android:layout_toRightOf="@+id/space6"
-        android:layout_below="@+id/space5" />
+        android:layout_alignRight="@+id/space7"
+        android:layout_alignEnd="@+id/space7"
+        android:layout_alignBottom="@+id/space" />
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="50dp"
+        android:id="@+id/space"
+        android:layout_toLeftOf="@+id/lvItems"
+        android:layout_below="@+id/nombreUsuario"
+        android:layout_toRightOf="@+id/space2" />
 
 
 </RelativeLayout>

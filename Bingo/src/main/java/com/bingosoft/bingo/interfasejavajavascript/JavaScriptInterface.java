@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.bingosoft.bingo.ActividadPrincipal;
 import com.bingosoft.bingo.model.Bingousuario;
+import com.bingosoft.bingo.utils.StringUtils;
 
 /**
  * Created by jandresv on 12/03/14.
@@ -48,16 +49,21 @@ public class JavaScriptInterface {
         return _conectado;
     }
 
-    public void Conectado(){
+    public void Conectado() {
         _conectado = true;
         ActividadPrincipal actividadPrincipal = (ActividadPrincipal)mContext;
         actividadPrincipal.usuarioConecto();
     }
 
-    public void DesConectado(){
+    public void DesConectado() {
         _conectado = false;
         ActividadPrincipal actividadPrincipal = (ActividadPrincipal)mContext;
         actividadPrincipal.usuarioDesconecto();
+    }
+
+    public void Balota(String balota) {
+        ActividadPrincipal actividadPrincipal = (ActividadPrincipal)mContext;
+        actividadPrincipal.Balota(StringUtils.balotas(balota));
     }
 
 

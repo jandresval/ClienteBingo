@@ -1,1 +1,1 @@
-include ':Bingo'
+include ':Bingo', 'library'
