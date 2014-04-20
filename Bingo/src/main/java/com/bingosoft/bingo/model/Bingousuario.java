@@ -61,7 +61,6 @@ public class Bingousuario {
             this.Gpslongitud = 0;
         this.Activo = Boolean.parseBoolean(jsonData.get("Activo").toString());
 
-        // jsonData.get("Idusuario")
 
     }
 

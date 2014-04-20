@@ -13,6 +13,8 @@
     <!--<string name="RutaConexionSignalR">file:///android_asset/www/index.html</string>-->
     <string name="RutaConexionSignalR">http://192.168.0.118:8090/prueba/index.html</string>
     <string name="Address">http://192.168.0.118:8090/signalr</string>
+    <string name="nameSpace">http://192.168.0.118:8090/</string>
+    <string name="mainRequestUrl">http://192.168.0.118:8090/BasicOperation.svc</string>
     <string name="textUsuario">Usuario</string>
     <string name="textConectar">Conectar</string>
 

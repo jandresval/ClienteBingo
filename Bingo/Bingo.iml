@@ -71,6 +71,7 @@
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="quick-json-1.0.2.3" level="project" />
+    <orderEntry type="library" exported="" name="ksoap2-android-assembly-3.2.0-jar-with-dependencies" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="lang-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.3" level="project" />

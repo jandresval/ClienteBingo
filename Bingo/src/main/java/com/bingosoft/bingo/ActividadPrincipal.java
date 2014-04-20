@@ -1,16 +1,16 @@
 package com.bingosoft.bingo;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -32,7 +32,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,8 +41,12 @@ import android.widget.ViewAnimator;
 
 import com.bingosoft.bingo.adapter.ImageAdapter;
 import com.bingosoft.bingo.adapter.items.ImageItem;
-import com.bingosoft.bingo.interfasejavajavascript.JavaScriptInterface;
+import com.bingosoft.bingo.data.DatabaseHandler;
+import com.bingosoft.bingo.interfases.JavaScriptInterface;
+import com.bingosoft.bingo.listeners.MyHandlerDLTablas;
+import com.bingosoft.bingo.model.Bingotbl;
 import com.bingosoft.bingo.model.Bingousuario;
+import com.bingosoft.bingo.model.TablasHandler;
 import com.bingosoft.bingo.utils.AndroidUtils;
 import com.bingosoft.bingo.utils.StringUtils;
 
@@ -126,6 +129,10 @@ public class ActividadPrincipal extends Activity {
 
     TwoWayView lvTest;
 
+    public List<Bingotbl> tablas;
+
+    TablasHandler tablasHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,8 +178,7 @@ public class ActividadPrincipal extends Activity {
 
         lvTest.setAdapter(imageAdapter);
 
-
-
+        tablasHandler = new TablasHandler();
     }
 
     protected void IniciarPantalas() {
@@ -223,36 +229,15 @@ public class ActividadPrincipal extends Activity {
 
     public void onConectarClick(View v) {
 
-        spinner.setProgress(20);
-
         conecionServer = (WebView)findViewById(R.id.conexionSignalR);
-
-        spinner.setProgress(40);
-
         textUsuario = (EditText)findViewById(R.id.TUsuario);
-
-        spinner.setProgress(50);
-
         String usuario = textUsuario.getText().toString();
-
-        spinner.setProgress(60);
-
         String ip = AndroidUtils.getLocalIpAddress();
-
-        spinner.setProgress(80);
-
         String macAddress = AndroidUtils.getMacAddress(this);
-
-        spinner.setProgress(90);
-
         conecionServer.loadUrl("javascript:Conectar('" +
                 usuario + "','" +
                 ip + "','" +
                 macAddress + "');");
-
-        spinner.setProgress(100);
-
-        spinner.setProgress(0);
     }
 
     public void enableConectar() {
@@ -334,6 +319,7 @@ public class ActividadPrincipal extends Activity {
     protected void onPause() {
         super.onPause();
         conecionServer.loadUrl("javascript:DesconectarUsu();");
+        getLoaderManager().destroyLoader(1);
     }
 
     @Override
@@ -363,7 +349,7 @@ public class ActividadPrincipal extends Activity {
             @Override
             public void run() {
 
-                Bingousuario bingousuario = javaScriptInterface.bingousuario;
+                Bingousuario bingousuario = javaScriptInterface._bingousuario;
 
                 nombreUsuario.setText(bingousuario.Alias);
 
@@ -399,16 +385,20 @@ public class ActividadPrincipal extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Bingousuario bingousuario = javaScriptInterface.bingousuario;
+                Bingousuario bingousuario = javaScriptInterface._bingousuario;
 
                 if (!(bingousuario.Saldoactual == 0))
                     iniciarJuego();
                 else
                     animacionPantallas.setDisplayedChild(1);
                 opcionesUsuario.setVisibility(View.GONE);
+
+
+
             }
         });
 
+        tablasHandler.execute(this);
     }
 
     public void usuarioDesconecto() {
@@ -441,6 +431,11 @@ public class ActividadPrincipal extends Activity {
                 imageAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+
+    public Bingousuario retornarUsuario () {
+        return javaScriptInterface._bingousuario;
     }
 
 
@@ -508,11 +503,15 @@ public class ActividadPrincipal extends Activity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_actividad_principal, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+        public View onCreateView(LayoutInflater inflater,
+                                 ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(
+                    R.layout.fragment_actividad_principal,
+                    container,
+                    false);
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
 
