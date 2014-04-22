@@ -15,9 +15,6 @@ import java.util.Map;
  */
 public class Bingotbl {
 
-    public Bingotbl() {
-
-    }
 
     public Bingotbl(Cursor cursor) {
         this.Tblnro = cursor.getString(0);
@@ -47,6 +44,7 @@ public class Bingotbl {
         this.Tblo4 = cursor.getString(24);
         this.Tblo5 = cursor.getString(25);
         this.Tblandroid = cursor.getInt(26);
+        this.Tblalias = cursor.getString(27);
     }
 
     public Bingotbl(JSONObject jsonClass) throws Exception {
@@ -84,6 +82,7 @@ public class Bingotbl {
         } else {
             this.Tblandroid = 0;
         }
+        this.Tblalias = jsonClass.get("Alias").toString();
 
     }
 
@@ -114,5 +113,6 @@ public class Bingotbl {
     public String Tblo4;
     public String Tblo5;
     public int Tblandroid;
+    public String Tblalias;
 
 }

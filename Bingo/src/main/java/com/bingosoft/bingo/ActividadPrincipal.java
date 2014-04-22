@@ -11,6 +11,7 @@ import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.graphics.Bitmap;
+import android.provider.ContactsContract;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -131,7 +132,6 @@ public class ActividadPrincipal extends Activity {
 
     public List<Bingotbl> tablas;
 
-    TablasHandler tablasHandler;
 
 
     @Override
@@ -178,7 +178,7 @@ public class ActividadPrincipal extends Activity {
 
         lvTest.setAdapter(imageAdapter);
 
-        tablasHandler = new TablasHandler();
+        DatabaseHandler databaseHandler = new DatabaseHandler(this);
     }
 
     protected void IniciarPantalas() {
@@ -232,7 +232,7 @@ public class ActividadPrincipal extends Activity {
         conecionServer = (WebView)findViewById(R.id.conexionSignalR);
         textUsuario = (EditText)findViewById(R.id.TUsuario);
         String usuario = textUsuario.getText().toString();
-        String ip = AndroidUtils.getLocalIpAddress();
+        String ip = AndroidUtils.getLocalIpAddress(this);
         String macAddress = AndroidUtils.getMacAddress(this);
         conecionServer.loadUrl("javascript:Conectar('" +
                 usuario + "','" +
@@ -319,7 +319,6 @@ public class ActividadPrincipal extends Activity {
     protected void onPause() {
         super.onPause();
         conecionServer.loadUrl("javascript:DesconectarUsu();");
-        getLoaderManager().destroyLoader(1);
     }
 
     @Override
@@ -398,7 +397,9 @@ public class ActividadPrincipal extends Activity {
             }
         });
 
-        tablasHandler.execute(this);
+        if (tablas == null) {
+            new TablasHandler().execute(this);
+        }
     }
 
     public void usuarioDesconecto() {

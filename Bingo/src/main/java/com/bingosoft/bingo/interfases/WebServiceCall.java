@@ -22,11 +22,8 @@ public class WebServiceCall {
     private String MAIN_REQUEST_URL = "http://192.168.0.118:8090/BasicOperation.svc";
     private String NAMESPACE = "http://tempuri.org/";
 
-    public WebServiceCall() {
-    }
-
-    public WebServiceCall(String nameSpace) {
-        this();
+    public WebServiceCall(String mainRequest, String nameSpace) {
+        this.MAIN_REQUEST_URL = mainRequest;
         this.NAMESPACE = nameSpace;
     }
 
@@ -61,6 +58,43 @@ public class WebServiceCall {
         HttpTransportSE ht = getHttpTransportSE();
 
         String soapAction = "http://tempuri.org/IBasicOperation/IniciarProcesoDescargaTablas";
+
+        try {
+            ht.call(soapAction, envelope);
+
+            SoapPrimitive resultsString = (SoapPrimitive)envelope.getResponse();
+
+            data = resultsString.toString();
+
+            if (NumberUtils.isNumber(data))
+                return Integer.parseInt(data);
+
+        }
+        catch (SocketTimeoutException t) {
+            t.printStackTrace();
+        } catch (IOException i) {
+            i.printStackTrace();
+        } catch (Exception q) {
+            q.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public int IniciarProcesoDescargaTablasUsuario(String usuario) {
+
+        String data = null;
+        String methodname = "IniciarProcesoDescargaxUsuario";
+
+        SoapObject request = new SoapObject(NAMESPACE, methodname);
+
+        request.addProperty("name",usuario);
+
+        SoapSerializationEnvelope envelope = getSoapSerializationEnvelope(request);
+
+        HttpTransportSE ht = getHttpTransportSE();
+
+        String soapAction = "http://tempuri.org/IBasicOperation/IniciarProcesoDescargaxUsuario";
 
         try {
             ht.call(soapAction, envelope);

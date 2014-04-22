@@ -1,6 +1,7 @@
 package com.bingosoft.bingo.interfases;
 
 import android.content.Context;
+import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.bingosoft.bingo.ActividadPrincipal;
@@ -21,6 +22,8 @@ public class JavaScriptInterface {
 
     public Bingousuario _bingousuario = null;
 
+    public Bingousuario _bingoUsuarioOld = null;
+
     public boolean _juego = false;
 
 
@@ -30,6 +33,7 @@ public class JavaScriptInterface {
         _juego = false;
     }
 
+    @JavascriptInterface
     public void cargarBingoUsuario(String jsonBingoUsuario) {
         if (!jsonBingoUsuario.equals("")) try {
             _bingousuario = new Bingousuario(jsonBingoUsuario);
@@ -38,34 +42,39 @@ public class JavaScriptInterface {
         }
     }
 
-
+    @JavascriptInterface
     public void iniciarJuego() {
         _juego = true;
     }
 
-
-
+    @JavascriptInterface
     public void showToast(String toast){
         Toast.makeText(_mContext, toast, Toast.LENGTH_SHORT).show();
     }
 
+    @JavascriptInterface
     public boolean Estado(){
         return _conectado;
     }
 
+    @JavascriptInterface
     public void Conectado() {
         _conectado = true;
         ActividadPrincipal actividadPrincipal = (ActividadPrincipal) _mContext;
         actividadPrincipal.usuarioConecto();
     }
 
+    @JavascriptInterface
     public void DesConectado() {
         _conectado = false;
+        _bingoUsuarioOld = _bingousuario;
         _bingousuario = null;
         ActividadPrincipal actividadPrincipal = (ActividadPrincipal) _mContext;
+        actividadPrincipal.tablas = null;
         actividadPrincipal.usuarioDesconecto();
     }
 
+    @JavascriptInterface
     public void Balota(String balota) {
         ActividadPrincipal actividadPrincipal = (ActividadPrincipal) _mContext;
         actividadPrincipal.Balota(StringUtils.balotas(balota));

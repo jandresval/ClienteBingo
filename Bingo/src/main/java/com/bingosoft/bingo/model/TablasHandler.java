@@ -5,8 +5,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.bingosoft.bingo.ActividadPrincipal;
+import com.bingosoft.bingo.R;
 import com.bingosoft.bingo.data.DatabaseHandler;
 import com.bingosoft.bingo.interfases.WebServiceCall;
+import com.bingosoft.bingo.utils.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,17 +56,20 @@ public class TablasHandler extends AsyncTask<Context, Void, List<Bingotbl>> {
 
 
     public void procesoInicioDescargaTablas() {
-        ActividadPrincipal actividadPrincipal = (ActividadPrincipal)_context;
-        _bingoUsuario = actividadPrincipal.retornarUsuario();
-
         assert _bingoUsuario != null;
         _cantidadTablas = _webServiceCall.IniciarProcesoDescargaTablas(_bingoUsuario.Alias);
 
     }
 
-    public void DescargaTablas(int pagina) {
+    public void procesoInicioDescargaTablasUsuario() {
+        assert _bingoUsuario != null;
+        _cantidadTablas = _webServiceCall.IniciarProcesoDescargaTablasUsuario(_bingoUsuario.Alias);
 
-        int fin = 0;
+    }
+
+    public void DescargaTablas(int pagina, boolean carga) {
+
+        int fin;
         if ((NUMERO_TABLAS*(pagina-1))+NUMERO_TABLAS > _cantidadTablas)
             fin = _cantidadTablas-(NUMERO_TABLAS*(pagina-1));
         else
@@ -78,8 +83,9 @@ public class TablasHandler extends AsyncTask<Context, Void, List<Bingotbl>> {
 
             for(int i=0;i<data.length();i++) {
                 Bingotbl bingotbl = new Bingotbl(data.getJSONObject(i));
-                _bingotbls.add(bingotbl);
                 _databaseHandler.createBingotbl(bingotbl);
+                if (carga)
+                    _bingotbls.add(bingotbl);
             }
 
         } catch (JSONException e) {
@@ -100,22 +106,75 @@ public class TablasHandler extends AsyncTask<Context, Void, List<Bingotbl>> {
         _paginas = 0;
         _descarga = false;
         _databaseHandler = new DatabaseHandler(params[0]);
-        _webServiceCall = new WebServiceCall();
+        _webServiceCall = new WebServiceCall(_context.getString(R.string.mainRequestUrl),
+                                             _context.getString(R.string.nameSpace));
+        ActividadPrincipal actividadPrincipal = (ActividadPrincipal)_context;
+        _bingoUsuario = actividadPrincipal.retornarUsuario();
 
+        Expiracion expiracion = _databaseHandler.getExpiracion();
+        String alias = _databaseHandler.getUsuarioTablas();
+        boolean soloUsuario = false;
+
+        if (!alias.equals("") && !alias.equals(_bingoUsuario.Alias))
+            soloUsuario = true;
+
+        if (!expiracion.InformacionActiva())
+            DescargarTablas();
+        else {
+            if (soloUsuario)
+                DescargarUsuario(alias);
+            CargaTablas();
+        }
+
+        return _bingotbls;
+    }
+
+    private void DescargarUsuario(String usuario) {
+
+        procesoInicioDescargaTablasUsuario();
+
+        String where = "Tblalias = ?";
+        String[] whereArgs = new String[]{usuario};
+        _databaseHandler.deleteBingotbl(where,whereArgs);
+
+        if (!(_cantidadTablas == 0)) {
+
+            _databaseHandler.deleteExpiracion();
+
+            _paginas = (int) Math.ceil((float)_cantidadTablas / (float)NUMERO_TABLAS);
+            int i = 1;
+            while (i <= _paginas) {
+                DescargaTablas(i,false);
+                i++;
+            }
+
+            Expiracion expiracion = new Expiracion();
+            _databaseHandler.createExpiracion(expiracion);
+        }
+    }
+
+
+    private void DescargarTablas() {
         procesoInicioDescargaTablas();
 
-        _databaseHandler.deleteTable("Bingotbl");
+        _databaseHandler.deleteBingotbl(null,null);
+        _databaseHandler.deleteExpiracion();
 
         if (!(_cantidadTablas == 0)) {
             _paginas = (int) Math.ceil((float)_cantidadTablas / (float)NUMERO_TABLAS);
             int i = 1;
             while (i <= _paginas) {
-                DescargaTablas(i);
+                DescargaTablas(i,true);
                 i++;
             }
-        }
 
-        return _bingotbls;
+            Expiracion expiracion = new Expiracion();
+            _databaseHandler.createExpiracion(expiracion);
+        }
+    }
+
+    private void CargaTablas() {
+        _bingotbls = _databaseHandler.getListBingotbl();
     }
 
     @Override

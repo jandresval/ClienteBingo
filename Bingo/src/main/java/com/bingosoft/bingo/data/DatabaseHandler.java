@@ -7,9 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.bingosoft.bingo.model.Bingotbl;
+import com.bingosoft.bingo.model.Expiracion;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bingosoft.bingo.utils.AndroidUtils.persistDate;
 
 /**
  * Created by Jaime on 2014-04-06.
@@ -47,6 +50,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     KEY_TBLO4 = "Tblo4",
     KEY_TBLO5 = "Tblo5",
     KEY_TBLANDROID = "Tblandroid",
+    KEY_TBLALIAS = "Tblalias",
     TABLE_EXPDATE = "Expdate",
     KEY_INICIODATE = "Iniciodate",
     KEY_FINDATE = "Findate",
@@ -89,7 +93,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sqlTbl = sqlTbl + KEY_TBLO3 + " TEXT,";
         sqlTbl = sqlTbl + KEY_TBLO4 + " TEXT,";
         sqlTbl = sqlTbl + KEY_TBLO5 + " TEXT,";
-        sqlTbl = sqlTbl + KEY_TBLANDROID + " INTEGER)";
+        sqlTbl = sqlTbl + KEY_TBLANDROID + " INTEGER,";
+        sqlTbl = sqlTbl + KEY_TBLALIAS + " TEXT)";
         db.execSQL(sqlTbl);
 
         String sqlExpdate = "CREATE TABLE " + TABLE_EXPDATE + "(";
@@ -112,16 +117,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public void deleteTable (String tabla) {
+    public void deleteBingotbl (String where, String[] whereArgs) {
 
         SQLiteDatabase db = getWritableDatabase();
-        String tablaBorrar = "DELETE FROM " + tabla;
 
         assert db != null;
-        db.execSQL(tablaBorrar);
+        db.delete(TABLE_BINGOTBL, where, whereArgs);
 
         db.close();
 
+    }
+
+    public void deleteExpiracion () {
+        SQLiteDatabase db = getWritableDatabase();
+
+        assert db != null;
+        db.delete(TABLE_EXPDATE, null, null);
+
+        db.close();
     }
 
     public void createBingotbl (Bingotbl bingotbl) {
@@ -156,11 +169,51 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_TBLO4, bingotbl.Tblo4);
         values.put(KEY_TBLO5, bingotbl.Tblo5);
         values.put(KEY_TBLANDROID, bingotbl.Tblandroid);
+        values.put(KEY_TBLALIAS, bingotbl.Tblalias);
 
         assert db != null;
         db.insert(TABLE_BINGOTBL, null, values);
 
         db.close();
+
+    }
+
+    public void createExpiracion (Expiracion expiracion) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_INICIODATE, persistDate(expiracion.Iniciodate));
+        values.put(KEY_FINDATE, persistDate(expiracion.Findate));
+        values.put(KEY_ACTIVE, expiracion.Activo);
+
+        assert db != null;
+        db.insert(TABLE_EXPDATE, null, values);
+
+        db.close();
+
+    }
+
+    public Expiracion getExpiracion () {
+        SQLiteDatabase db = getReadableDatabase();
+
+        assert db != null;
+        Cursor cursor = db.query(TABLE_EXPDATE, new String[]{
+                KEY_INICIODATE,
+                KEY_FINDATE,
+                KEY_ACTIVE},KEY_ACTIVE + " = ?",new String[]{"1"},
+                null,null,null,null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Expiracion expiracion = new Expiracion(cursor);
+
+        cursor.close();
+
+        db.close();
+
+        return expiracion;
 
     }
 
@@ -194,7 +247,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 KEY_TBLO3,
                 KEY_TBLO4,
                 KEY_TBLO5,
-                KEY_TBLANDROID}, KEY_TBLNRO + " = '?'", new String[] {
+                KEY_TBLANDROID,
+                KEY_TBLALIAS}, KEY_TBLNRO + " = '?'", new String[] {
                 Tblnro
         }, null, null, null, null);
 
@@ -202,6 +256,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         Bingotbl bingotbl = new Bingotbl(cursor);
+
+        cursor.close();
 
         db.close();
 
@@ -219,12 +275,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public String getUsuarioTablas() {
+        SQLiteDatabase db = getReadableDatabase();
 
-    public List<Bingotbl> getListBingotbl () {
+        String consulta = "SELECT MAX(" + KEY_TBLALIAS + ") FROM " + TABLE_BINGOTBL;
+
+        assert db != null;
+        Cursor cursor = db.rawQuery(consulta, null);
+        if (cursor.moveToFirst())
+            return cursor.getString(0);
+        else
+            return "";
+
+    }
+
+
+    public ArrayList<Bingotbl> getListBingotbl () {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        List<Bingotbl> tablas = new ArrayList<Bingotbl>();
+        ArrayList<Bingotbl> tablas = new ArrayList<Bingotbl>();
 
         assert db != null;
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_BINGOTBL, null);
@@ -248,6 +318,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
+        assert db != null;
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_BINGOTBL, null);
 
         int count = cursor.getCount();
@@ -258,6 +329,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return count;
 
+    }
+
+    public int getExpiracionCount() {
+        SQLiteDatabase db = getReadableDatabase();
+
+        assert db != null;
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_EXPDATE, null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+
+        db.close();
+
+        return count;
     }
 
 }
