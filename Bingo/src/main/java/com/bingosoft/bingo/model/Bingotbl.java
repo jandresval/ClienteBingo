@@ -2,6 +2,7 @@ package com.bingosoft.bingo.model;
 
 import android.database.Cursor;
 
+import com.bingosoft.bingo.utils.StringUtils;
 import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
 
@@ -45,44 +46,45 @@ public class Bingotbl {
         this.Tblo5 = cursor.getString(25);
         this.Tblandroid = cursor.getInt(26);
         this.Tblalias = cursor.getString(27);
+        this.Tblpiram = cursor.getString(28);
     }
 
     public Bingotbl(JSONObject jsonClass) throws Exception {
 
 
-        this.Tblnro = jsonClass.get("Tblnro").toString();
-        this.Tblb1 = jsonClass.get("Tblb1").toString();
-        this.Tblb2 = jsonClass.get("Tblb2").toString();
-        this.Tblb3 = jsonClass.get("Tblb3").toString();
-        this.Tblb4 = jsonClass.get("Tblb4").toString();
-        this.Tblb5 = jsonClass.get("Tblb5").toString();
-        this.Tbli1 = jsonClass.get("Tbli1").toString();
-        this.Tbli2 = jsonClass.get("Tbli2").toString();
-        this.Tbli3 = jsonClass.get("Tbli3").toString();
-        this.Tbli4 = jsonClass.get("Tbli4").toString();
-        this.Tbli5 = jsonClass.get("Tbli5").toString();
-        this.Tbln1 = jsonClass.get("Tbln1").toString();
-        this.Tbln2 = jsonClass.get("Tbln2").toString();
-        this.Tbln3 = jsonClass.get("Tbln3").toString();
-        this.Tbln4 = jsonClass.get("Tbln4").toString();
-        this.Tbln5 = jsonClass.get("Tbln5").toString();
-        this.Tblg1 = jsonClass.get("Tblg1").toString();
-        this.Tblg2 = jsonClass.get("Tblg2").toString();
-        this.Tblg3 = jsonClass.get("Tblg3").toString();
-        this.Tblg4 = jsonClass.get("Tblg4").toString();
-        this.Tblg5 = jsonClass.get("Tblg5").toString();
-        this.Tblo1 = jsonClass.get("Tblo1").toString();
-        this.Tblo2 = jsonClass.get("Tblo2").toString();
-        this.Tblo3 = jsonClass.get("Tblo3").toString();
-        this.Tblo4 = jsonClass.get("Tblo4").toString();
-        this.Tblo5 = jsonClass.get("Tblo5").toString();
-        String tblAnd = jsonClass.get("Tblandroid").toString();
-        if (NumberUtils.isNumber(tblAnd)) {
-            this.Tblandroid = Integer.parseInt(tblAnd);
-        } else {
+        this.Tblnro = jsonClass.getString("Tblnro");
+        this.Tblb1 = jsonClass.getString("Tblb1");
+        this.Tblb2 = jsonClass.getString("Tblb2");
+        this.Tblb3 = jsonClass.getString("Tblb3");
+        this.Tblb4 = jsonClass.getString("Tblb4");
+        this.Tblb5 = jsonClass.getString("Tblb5");
+        this.Tbli1 = jsonClass.getString("Tbli1");
+        this.Tbli2 = jsonClass.getString("Tbli2");
+        this.Tbli3 = jsonClass.getString("Tbli3");
+        this.Tbli4 = jsonClass.getString("Tbli4");
+        this.Tbli5 = jsonClass.getString("Tbli5");
+        this.Tbln1 = jsonClass.getString("Tbln1");
+        this.Tbln2 = jsonClass.getString("Tbln2");
+        this.Tbln3 = jsonClass.getString("Tbln3");
+        this.Tbln4 = jsonClass.getString("Tbln4");
+        this.Tbln5 = jsonClass.getString("Tbln5");
+        this.Tblg1 = jsonClass.getString("Tblg1");
+        this.Tblg2 = jsonClass.getString("Tblg2");
+        this.Tblg3 = jsonClass.getString("Tblg3");
+        this.Tblg4 = jsonClass.getString("Tblg4");
+        this.Tblg5 = jsonClass.getString("Tblg5");
+        this.Tblo1 = jsonClass.getString("Tblo1");
+        this.Tblo2 = jsonClass.getString("Tblo2");
+        this.Tblo3 = jsonClass.getString("Tblo3");
+        this.Tblo4 = jsonClass.getString("Tblo4");
+        this.Tblo5 = jsonClass.getString("Tblo5");
+        boolean tblAndroid = jsonClass.getBoolean("Tblandroid");
+        if (tblAndroid)
+            this.Tblandroid = 1;
+        else
             this.Tblandroid = 0;
-        }
-        this.Tblalias = jsonClass.get("Alias").toString();
+        this.Tblalias = jsonClass.getString("Alias");
+        this.Tblpiram = jsonClass.getString("Tblpiram");
 
     }
 
@@ -114,5 +116,6 @@ public class Bingotbl {
     public String Tblo5;
     public int Tblandroid;
     public String Tblalias;
+    public String Tblpiram;
 
 }

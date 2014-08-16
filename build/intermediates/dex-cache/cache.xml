@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-rc1-046181494023f404037a1b147eae9d6a57495abc.jar"
+        jar="G:\Projects\Java\ClienteBingo\build\intermediates\exploded-aar\com.android.support\support-v13\21.0.0-rc1\libs\internal_impl-21.0.0-rc1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="b274fcef3e31367c6b53c3ad56ff788783eb0f28"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\classes-4d5853cc21db3618b3cfd4336c1cfd3a7b583c32.jar"
+        jar="G:\Projects\Java\ClienteBingo\build\intermediates\exploded-aar\com.android.support\support-v13\21.0.0-rc1\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="50ffbc8fda41e9cba4bca2f5267bdd9842325ab2"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\support-annotations-21.0.0-rc1-42c419b2f1726253844b7b4cf64bba0d455c160e.jar"
+        jar="G:\adt-bundle-windows-x86_64-20131030\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.0-rc1\support-annotations-21.0.0-rc1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="57c343f05b73b923bf2502b05851dbfe12193dcb"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\classes-87e2bdaf3e4a7c6265cde8f644083fbc87419842.jar"
+        jar="G:\Projects\Java\ClienteBingo\build\intermediates\exploded-aar\ClienteBingo\library\unspecified\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="efdf8078076864d57f164f5fb1fd4003a8c324de"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\joda-time-2.3-76fa99dd4d6ce999967421029c5ae3edc68902e8.jar"
+        jar="G:\Projects\Java\ClienteBingo\Bingo\src\main\librerias\joda-time-2.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="56498efd17752898cfcc3868c1b6211a07b12b8f"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\classes-757d93d303553e00f498ab84f096d07581094da6.jar"
+        jar="G:\Projects\Java\ClienteBingo\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.0-rc1\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="7ae84435ebc95f67a3f5e511025e96caa8688da2"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\lang-2.1.0-9d4ee399ea9f689558e5b699d4a00354b7625a30.jar"
+        jar="C:\Users\Jaime\.gradle\caches\modules-2\files-2.1\org.mod4j.org.apache.commons\lang\2.1.0\c2200288f7c9dd4f9e8b647a95290f978362b567\lang-2.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="c2200288f7c9dd4f9e8b647a95290f978362b567"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\quick-json-1.0.2.3-fe13c0fea18b7716c30c981fd1a124bd7281c4ae.jar"
+        jar="G:\Projects\Java\ClienteBingo\Bingo\src\main\librerias\quick-json-1.0.2.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="6c4f770696a76cac01f2ce2c68de239a6bc072bd"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-rc1-a114f2ec7277926f9ed110079a2e47bd156e2212.jar"
+        jar="G:\Projects\Java\ClienteBingo\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.0-rc1\libs\internal_impl-21.0.0-rc1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="d1a625e8a94bf7c73e0f9d30ad1b483ff6ea64e9"/>
+    <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.2.0-jar-with-dependencies-f399ca94d9dac3175d414e58e878eb0a211b1319.jar"
+        jar="G:\Projects\Java\ClienteBingo\Bingo\src\main\librerias\ksoap2-android-assembly-3.2.0-jar-with-dependencies.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="28d8f13fdec2fe5de24af98b7131c858c266bbea"/>
+
+</pre-dex-items>

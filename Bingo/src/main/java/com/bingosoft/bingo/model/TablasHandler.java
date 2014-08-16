@@ -67,7 +67,7 @@ public class TablasHandler extends AsyncTask<Context, Void, List<Bingotbl>> {
 
     }
 
-    public void DescargaTablas(int pagina, boolean carga) {
+    public boolean DescargaTablas(int pagina, boolean carga) {
 
         int fin;
         if ((NUMERO_TABLAS*(pagina-1))+NUMERO_TABLAS > _cantidadTablas)
@@ -87,11 +87,14 @@ public class TablasHandler extends AsyncTask<Context, Void, List<Bingotbl>> {
                 if (carga)
                     _bingotbls.add(bingotbl);
             }
+            return true;
 
         } catch (JSONException e) {
             e.printStackTrace();
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
 
     }
@@ -115,10 +118,10 @@ public class TablasHandler extends AsyncTask<Context, Void, List<Bingotbl>> {
         String alias = _databaseHandler.getUsuarioTablas();
         boolean soloUsuario = false;
 
-        if (!alias.equals("") && !alias.equals(_bingoUsuario.Alias))
+        if (!(alias==null) && !alias.equals("") && !alias.equals(_bingoUsuario.Alias))
             soloUsuario = true;
 
-        if (!expiracion.InformacionActiva())
+        if (expiracion == null || expiracion.InformacionActiva())
             DescargarTablas();
         else {
             if (soloUsuario)
@@ -143,13 +146,19 @@ public class TablasHandler extends AsyncTask<Context, Void, List<Bingotbl>> {
 
             _paginas = (int) Math.ceil((float)_cantidadTablas / (float)NUMERO_TABLAS);
             int i = 1;
+            boolean process = true;
             while (i <= _paginas) {
-                DescargaTablas(i,false);
+                if (!DescargaTablas(i,false)) {
+                    process = false;
+                    break;
+                }
                 i++;
             }
 
-            Expiracion expiracion = new Expiracion();
-            _databaseHandler.createExpiracion(expiracion);
+            if (process) {
+                Expiracion expiracion = new Expiracion();
+                _databaseHandler.createExpiracion(expiracion);
+            }
         }
     }
 
@@ -163,13 +172,19 @@ public class TablasHandler extends AsyncTask<Context, Void, List<Bingotbl>> {
         if (!(_cantidadTablas == 0)) {
             _paginas = (int) Math.ceil((float)_cantidadTablas / (float)NUMERO_TABLAS);
             int i = 1;
+            boolean process = true;
             while (i <= _paginas) {
-                DescargaTablas(i,true);
+                if (!DescargaTablas(i,true)) {
+                    process = false;
+                    break;
+                }
                 i++;
             }
 
-            Expiracion expiracion = new Expiracion();
-            _databaseHandler.createExpiracion(expiracion);
+            if (process) {
+                Expiracion expiracion = new Expiracion();
+                _databaseHandler.createExpiracion(expiracion);
+            }
         }
     }
 

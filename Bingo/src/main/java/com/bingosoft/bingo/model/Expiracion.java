@@ -30,7 +30,6 @@ public class Expiracion {
     }
 
     public boolean InformacionActiva () {
-        Calendar c = Calendar.getInstance();
         Date now = new Date(currentTimeMillis());
         if (this.Findate == null)
             return false;

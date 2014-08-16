@@ -1,24 +1,20 @@
 package com.bingosoft.bingo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.LoaderManager;
-import android.content.Loader;
 import android.graphics.Bitmap;
-import android.provider.ContactsContract;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,10 +29,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.util.Log;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
@@ -44,7 +40,6 @@ import com.bingosoft.bingo.adapter.ImageAdapter;
 import com.bingosoft.bingo.adapter.items.ImageItem;
 import com.bingosoft.bingo.data.DatabaseHandler;
 import com.bingosoft.bingo.interfases.JavaScriptInterface;
-import com.bingosoft.bingo.listeners.MyHandlerDLTablas;
 import com.bingosoft.bingo.model.Bingotbl;
 import com.bingosoft.bingo.model.Bingousuario;
 import com.bingosoft.bingo.model.TablasHandler;
@@ -52,6 +47,10 @@ import com.bingosoft.bingo.utils.AndroidUtils;
 import com.bingosoft.bingo.utils.StringUtils;
 
 import org.lucasr.twowayview.TwoWayView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class ActividadPrincipal extends Activity {
 
@@ -460,7 +459,7 @@ public class ActividadPrincipal extends Activity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
@@ -497,6 +496,7 @@ public class ActividadPrincipal extends Activity {
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
+
             return fragment;
         }
 
@@ -511,8 +511,13 @@ public class ActividadPrincipal extends Activity {
                     R.layout.fragment_actividad_principal,
                     container,
                     false);
-            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            //textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Point point = new Point();
+            display.getSize(point);
+            int width = point.x;
+            int division = 6;
+            ImageView primerSpace = (ImageView) rootView.findViewById(R.id.primerSpace);
+            primerSpace.setPadding(width/division,0,0,0);
             return rootView;
         }
 

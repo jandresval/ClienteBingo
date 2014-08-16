@@ -51,6 +51,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     KEY_TBLO5 = "Tblo5",
     KEY_TBLANDROID = "Tblandroid",
     KEY_TBLALIAS = "Tblalias",
+    KEY_TBLPIRAM = "Tblpiram",
     TABLE_EXPDATE = "Expdate",
     KEY_INICIODATE = "Iniciodate",
     KEY_FINDATE = "Findate",
@@ -94,7 +95,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sqlTbl = sqlTbl + KEY_TBLO4 + " TEXT,";
         sqlTbl = sqlTbl + KEY_TBLO5 + " TEXT,";
         sqlTbl = sqlTbl + KEY_TBLANDROID + " INTEGER,";
-        sqlTbl = sqlTbl + KEY_TBLALIAS + " TEXT)";
+        sqlTbl = sqlTbl + KEY_TBLALIAS + " TEXT,";
+        sqlTbl = sqlTbl + KEY_TBLPIRAM + " TEXT)";
         db.execSQL(sqlTbl);
 
         String sqlExpdate = "CREATE TABLE " + TABLE_EXPDATE + "(";
@@ -170,6 +172,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_TBLO5, bingotbl.Tblo5);
         values.put(KEY_TBLANDROID, bingotbl.Tblandroid);
         values.put(KEY_TBLALIAS, bingotbl.Tblalias);
+        values.put(KEY_TBLPIRAM, bingotbl.Tblpiram);
 
         assert db != null;
         db.insert(TABLE_BINGOTBL, null, values);
@@ -204,10 +207,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 KEY_ACTIVE},KEY_ACTIVE + " = ?",new String[]{"1"},
                 null,null,null,null);
 
-        if (cursor != null)
+        Expiracion expiracion = null;
+        if (cursor != null && !(cursor.getCount()==0)) {
             cursor.moveToFirst();
+            expiracion = new Expiracion(cursor);
+        }
 
-        Expiracion expiracion = new Expiracion(cursor);
 
         cursor.close();
 
@@ -248,7 +253,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 KEY_TBLO4,
                 KEY_TBLO5,
                 KEY_TBLANDROID,
-                KEY_TBLALIAS}, KEY_TBLNRO + " = '?'", new String[] {
+                KEY_TBLALIAS,
+                KEY_TBLPIRAM}, KEY_TBLNRO + " = '?'", new String[] {
                 Tblnro
         }, null, null, null, null);
 
@@ -282,7 +288,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         assert db != null;
         Cursor cursor = db.rawQuery(consulta, null);
-        if (cursor.moveToFirst())
+        if(!(cursor==null) && !(cursor.getCount()==0) && cursor.moveToFirst())
             return cursor.getString(0);
         else
             return "";
@@ -297,7 +303,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<Bingotbl> tablas = new ArrayList<Bingotbl>();
 
         assert db != null;
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_BINGOTBL, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_BINGOTBL + " ORDER BY "
+                + KEY_TBLALIAS
+                , null);
 
         if (cursor.moveToFirst()) {
             do {
