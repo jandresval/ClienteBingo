@@ -5,10 +5,10 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.+'
+    compile files('src/main/library/support-v4-18.0.0.jar')
 }
 
 android {
     compileSdkVersion 16
-    buildToolsVersion "19.0.0"
+    buildToolsVersion '19.1.0'
 }
