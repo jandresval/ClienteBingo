@@ -2,6 +2,12 @@
 <pre-dex-items>
 
     <item
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\classes-65d08167e6cb74c1bc2ad4295ae01edf18046b9a.jar"
+        jar="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\exploded-aar\ClienteBingo\library\unspecified\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="8d2f1918de29009e5f02c1c54b9553de0065c42f"/>
+    <item
         dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\support-v4-18.0.0-630081c036d365cb0d9bac6ad5acd137a1dec966.jar"
         jar="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\exploded-aar\ClienteBingo\library\unspecified\libs\support-v4-18.0.0.jar"
         jumboMode="false"
@@ -14,10 +20,10 @@
         revision="19.1.0"
         sha1="6a2fa0c0b54359ee359fd40244e1ce2dc6cab408"/>
     <item
-        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\classes-65d08167e6cb74c1bc2ad4295ae01edf18046b9a.jar"
-        jar="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\exploded-aar\ClienteBingo\library\unspecified\classes.jar"
+        dex="G:\Projects\Java\ClienteBingo\Bingo\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.2.0-jar-with-dependencies-f399ca94d9dac3175d414e58e878eb0a211b1319.jar"
+        jar="G:\Projects\Java\ClienteBingo\Bingo\src\main\librerias\ksoap2-android-assembly-3.2.0-jar-with-dependencies.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="8d2f1918de29009e5f02c1c54b9553de0065c42f"/>
+        sha1="28d8f13fdec2fe5de24af98b7131c858c266bbea"/>
 
 </pre-dex-items>

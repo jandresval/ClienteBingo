@@ -26,4 +26,5 @@ dependencies {
     compile project(':library')
     compile files('src/main/librerias/support-v13-18.0.0.jar')
     compile files('src/main/librerias/support-v4-18.0.0.jar')
+    compile files('src/main/librerias/ksoap2-android-assembly-3.2.0-jar-with-dependencies.jar')
 }
