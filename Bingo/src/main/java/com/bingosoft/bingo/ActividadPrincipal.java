@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -146,6 +148,39 @@ public class ActividadPrincipal extends Activity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            float mStartDragx;
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+
+                ViewPager viewPagerInside = (ViewPager)view;
+                SectionsPagerAdapter sectionPageAd;
+
+                if(viewPagerInside.getCurrentItem()==viewPagerInside.getAdapter().getCount()-1) {
+                    float x = event.getX();
+
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            mStartDragx = x;
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            if (x < mStartDragx) {
+                                sectionPageAd =
+                                        (SectionsPagerAdapter)viewPagerInside.getAdapter();
+                                sectionPageAd.attach();
+                            } else {
+                                mStartDragx = 0;
+                            }
+                            break;
+                    }
+                }else {
+                    mStartDragx = 0;
+                }
+                return false;
+            }
+        });
 
         opcionesUsuario = (ListView) findViewById(R.id.opcionesUsuario);
 
@@ -445,8 +480,15 @@ public class ActividadPrincipal extends Activity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private int _pages = 2;
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
         }
 
         @Override
@@ -456,24 +498,28 @@ public class ActividadPrincipal extends Activity {
             return PlaceholderFragment.newInstance(position + 1);
         }
 
+
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 4;
+            return _pages;
+        }
+
+        public void attach(){
+            final FragmentTransaction trans = getFragmentManager().beginTransaction();
+            int _pagestemp = _pages+1;
+            for(int i=0;i<_pagestemp;i++){
+                trans.show(getItem(i));
+            }
+            _pages = _pagestemp;
+            this.notifyDataSetChanged();
+            trans.commit();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-            }
-            return null;
+            return getString(R.string.title_section1).toUpperCase(l).concat(Integer.toString(position));
         }
     }
 
@@ -524,10 +570,8 @@ public class ActividadPrincipal extends Activity {
         @Override
         public void onResume(){
             super.onResume();
-
-
-
         }
+
 
     }
 

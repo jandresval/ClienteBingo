@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Cliente Bingo</string>
+    <string name="title_section">Section</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
@@ -11,10 +12,10 @@
 
     <string name="JavaFunciones">AndroidFunction</string>
     <!--<string name="RutaConexionSignalR">file:///android_asset/www/index.html</string>-->
-    <string name="RutaConexionSignalR">http://192.168.0.121:8090/prueba/index.html</string>
-    <string name="Address">http://192.168.0.121:8090/signalr</string>
+    <string name="RutaConexionSignalR">http://192.170.0.103:8090/prueba/index.html</string>
+    <string name="Address">http://192.170.0.103:8090/signalr</string>
     <string name="nameSpace">http://tempuri.org/</string>
-    <string name="mainRequestUrl">http://192.168.0.121:8090/BasicOperation.svc</string>
+    <string name="mainRequestUrl">http://192.170.0.103:8090/BasicOperation.svc</string>
     <string name="textUsuario">Usuario</string>
     <string name="textConectar">Conectar</string>
 
